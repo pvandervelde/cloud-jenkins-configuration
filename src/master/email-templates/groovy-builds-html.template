@@ -728,7 +728,7 @@
             <td class="message">
                 You are receiving this email because either one of your commits was part of this build or you requested it<br />
                 <p>
-                    <a href="mailto:TFS.Builds@vista.co">Build support team</a> | <a href="${rooturl}">Jenkins server</a>
+                    <a href="mailto:buildsupport@example.com">Build support team</a> | <a href="${rooturl}">Jenkins server</a>
                 </p>
             </td>
         </tr>

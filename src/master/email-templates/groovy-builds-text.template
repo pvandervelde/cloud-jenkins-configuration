@@ -6,7 +6,6 @@ Build:      ${build.displayName} (${rooturl}${build.url})
 Built on:   ${it.timestampString}
 Time taken: ${build.durationString}
 <%
-    def healthIconSize = "16x16"
     def healthReports = project.buildHealthReports
     if (healthReports != null)
     {
@@ -16,7 +15,6 @@ Score        Description
 <%
         for (hudson.model.HealthReport healthReport : healthReports)
         {
-            __url = healthReport.getIconUrl(healthIconSize)
 %>${healthReport.score}          ${healthReport.description}
 <%
         }
@@ -182,7 +180,7 @@ add a suitable failure cause</a> for it here: ${rooturl}${project.url}/failure-c
 You are receiving this email because either one of your commits was part of this build or you requested it
 For more information:
 
-Contact the build support team at: TFS.Builds@vista.co
+Contact the build support team at: buildsupport@example.com
 
     Or
 
