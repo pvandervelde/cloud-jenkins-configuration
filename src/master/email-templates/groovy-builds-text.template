@@ -164,6 +164,22 @@ add a suitable failure cause</a> for it here: ${rooturl}${project.url}/failure-c
         }
     }
 
+    def staticAnalysis = it.staticAnalysisActions
+    if ((staticAnalysis != null) && !staticAnalysis.isEmpty())
+    {
+%>
+## Static Analysis ##
+Name                                Result    Total    High    Normal    Low
+<%
+        staticAnalysis.each()
+        {
+            analysis ->
+%>
+${analysis.displayName}             ${analysis.result.numberOfAnnotations}    ${analysis.result.getNumberOfAnnotations('HIGH')} ${analysis.result.getNumberOfAnnotations('NORMAL')}    ${analysis.result.getNumberOfAnnotations('LOW')}
+<%
+        }
+    }
+
     if(build.result == hudson.model.Result.FAILURE)
     {
 %>
