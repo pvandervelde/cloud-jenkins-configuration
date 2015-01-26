@@ -115,13 +115,6 @@ add a suitable failure cause</a> for it here: ${rooturl}${project.url}/failure-c
 <%
         unitTests.each()
         {
-            f ->
-%>* ${f} (${rooturl}${build.url}artifact/${f})
-<%
-        }
-
-        unitTests.each()
-        {
             junitResult ->
             junitResult.getChildren().each()
             {
@@ -136,6 +129,7 @@ add a suitable failure cause</a> for it here: ${rooturl}${project.url}/failure-c
                 }
             }
         }
+%>    The test report has more specific information about the unit tests at: ${rooturl}${build.url}testReport.<%
     }
 
     def coverage = it.coberturaAction

@@ -118,6 +118,13 @@
         font-size:12px;
     }
 
+    .moreinfo
+    {
+        list-style-type: none;
+        color:#aaa;
+        font-size:13px;
+    }
+
     .console
     {
         font: normal normal 90% Courier New, monotype;
@@ -466,18 +473,6 @@
 %>
         <div class="main">
             <h5>Unit tests:</h5>
-            <ul>
-<%
-        unitTests.each()
-        {
-            f ->
-%>
-                <li><a href="${rooturl}${build.url}artifact/${f}">${f}</a></li>
-<%
-        }
-%>
-            </ul>
-
             <table width="100%">
                 <caption>Test modules</caption>
 <%
@@ -516,6 +511,9 @@
         }
 %>
             </table>
+            <ul class="moreinfo">
+                <li>The <a href="${rooturl}${build.url}testReport">test report</a> has more specific information about the unit tests.</li>
+            </ul>
         </div>
 <%
     }
