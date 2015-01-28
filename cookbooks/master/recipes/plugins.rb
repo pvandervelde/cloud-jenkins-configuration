@@ -84,3 +84,14 @@ end
 
 
 # Create the jenkins config files
+
+# credentials
+
+# email-ext
+
+# git
+
+# gittool
+
+
+# msbuild
