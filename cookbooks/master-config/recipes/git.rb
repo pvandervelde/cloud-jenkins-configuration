@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: git
-# Recipe:: default
+# Cookbook Name:: master-config
+# Recipe:: git
 #
 # Copyright 2014, Patrick van der Velde
 #

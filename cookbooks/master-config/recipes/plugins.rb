@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: master
+# Cookbook Name:: master-config
 # Recipe:: plugins
 #
 # Copyright 2014, Patrick van der Velde
