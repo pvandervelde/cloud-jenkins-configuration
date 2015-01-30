@@ -88,10 +88,55 @@ end
 # credentials
 
 # email-ext
+jenkins_plugin_emailext_id = 'email-ext@2.39'
+jenkins_emailext_default_recipient = 'cc:builds@example.com'
+jenkins_emailext_default_replyto = 'builds@example.com'
 
-# git
+file "#{ci_directory}\\hudson.plugins.emailext.ExtendedEmailPublisher.xml" do
+  content <<-XML
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.emailext.ExtendedEmailPublisherDescriptor plugin="#{jenkins_plugin_emailext_id}">
+  <useSsl>false</useSsl>
+  <charset>UTF-8</charset>
+  <defaultContentType>text/html</defaultContentType>
+  <defaultSubject>${PROJECT_DISPLAY_NAME} - Build # $BUILD_NUMBER - $BUILD_STATUS!</defaultSubject>
+  <defaultBody> ${SCRIPT, template=&quot;groovy-builds-html.template&quot;}</defaultBody>
+  <defaultPresendScript></defaultPresendScript>
+  <defaultClasspath/>
+  <emergencyReroute></emergencyReroute>
+  <maxAttachmentSize>-1</maxAttachmentSize>
+  <recipientList>#{jenkins_emailext_default_recipient}</recipientList>
+  <defaultReplyTo>#{jenkins_emailext_default_replyto}</defaultReplyTo>
+  <excludedCommitters></excludedCommitters>
+  <overrideGlobalSettings>false</overrideGlobalSettings>
+  <precedenceBulk>false</precedenceBulk>
+  <debugMode>false</debugMode>
+  <enableSecurity>true</enableSecurity>
+  <requireAdminForTemplateTesting>true</requireAdminForTemplateTesting>
+  <enableWatching>false</enableWatching>
+</hudson.plugins.emailext.ExtendedEmailPublisherDescriptor>>
+  XML
+  action :create
+end
 
 # gittool
+jenkins_plugin_gittool_id = 'git-client@1.10.1'
+
+file "#{ci_directory}\\hudson.plugins.git.GitTool.xml" do
+  content <<-XML
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.git.GitTool_-DescriptorImpl plugin="#{jenkins_plugin_gittool_id}">
+  <installations class="hudson.plugins.git.GitTool-array">
+    <hudson.plugins.git.GitTool>
+      <name>Default</name>
+      <home>git.exe</home>
+      <properties/>
+    </hudson.plugins.git.GitTool>
+  </installations>
+</hudson.plugins.git.GitTool_-DescriptorImpl>
+  XML
+  action :create
+end
 
 
 # msbuild
