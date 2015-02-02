@@ -13,7 +13,7 @@ include_recipe 'windows'
 # Should really get this from outside
 ci_directory = 'c:\\ci'
 
-# collection of plugins
+# Install the plugins
 plugins = {
   'active-directory' => '1.39',
   'all-changes' => '1.3',
@@ -73,7 +73,6 @@ plugins = {
   'ws-cleanup' => '0.25',
 }
 
-#
 plugins.each do |name, version|
   remote_file "#{ci_directory}\\plugins\\#{name}.hpi" do
     source 'http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi'
@@ -81,21 +80,18 @@ plugins.each do |name, version|
   end
 end
 
-
-
 # Create the jenkins config files
-
 # credentials
 
 # email-ext
-jenkins_plugin_emailext_id = 'email-ext@2.39'
+jenkins_plugin_emailext_version = plugins["email-ext"]
 jenkins_emailext_default_recipient = 'cc:builds@example.com'
 jenkins_emailext_default_replyto = 'builds@example.com'
 
 file "#{ci_directory}\\hudson.plugins.emailext.ExtendedEmailPublisher.xml" do
   content <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
-<hudson.plugins.emailext.ExtendedEmailPublisherDescriptor plugin="#{jenkins_plugin_emailext_id}">
+<hudson.plugins.emailext.ExtendedEmailPublisherDescriptor plugin="email-ext@#{jenkins_plugin_emailext_version}">
   <useSsl>false</useSsl>
   <charset>UTF-8</charset>
   <defaultContentType>text/html</defaultContentType>
@@ -120,12 +116,11 @@ file "#{ci_directory}\\hudson.plugins.emailext.ExtendedEmailPublisher.xml" do
 end
 
 # gittool
-jenkins_plugin_gittool_id = 'git-client@1.10.1'
-
+jenkins_plugin_gittool_version = plugins["git-client"]
 file "#{ci_directory}\\hudson.plugins.git.GitTool.xml" do
   content <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
-<hudson.plugins.git.GitTool_-DescriptorImpl plugin="#{jenkins_plugin_gittool_id}">
+<hudson.plugins.git.GitTool_-DescriptorImpl plugin="git-client@#{jenkins_plugin_gittool_version}">
   <installations class="hudson.plugins.git.GitTool-array">
     <hudson.plugins.git.GitTool>
       <name>Default</name>
@@ -138,5 +133,45 @@ file "#{ci_directory}\\hudson.plugins.git.GitTool.xml" do
   action :create
 end
 
-
 # msbuild
+jenkins_plugin_msbuild_version = plugins["msbuild"]
+file "#{ci_directory}\\hudson.plugins.msbuild.MsBuildBuilder.xml" do
+  content <<-XML
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.msbuild.MsBuildBuilder_-DescriptorImpl plugin="msbuild@#{jenkins_plugin_msbuild_version}">
+  <installations>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>Net-3.5 (x86)</name>
+      <home>C:\\Windows\\Microsoft.NET\\Framework\\v3.5\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>Net-3.5 (x64)</name>
+      <home>C:\\Windows\\Microsoft.NET\\Framework64\\v3.5\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>Net-4.5 (x86)</name>
+      <home>C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>Net-4.5 (x64)</name>
+      <home>C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>12.0 (x86)</name>
+      <home>C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+    <hudson.plugins.msbuild.MsBuildInstallation>
+      <name>12.0 (x64)</name>
+      <home>C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\amd64\\msbuild.exe</home>
+      <properties/>
+    </hudson.plugins.msbuild.MsBuildInstallation>
+  </installations>
+</hudson.plugins.msbuild.MsBuildBuilder_-DescriptorImpl>
+  XML
+  action :create
+end

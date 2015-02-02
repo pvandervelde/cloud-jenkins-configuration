@@ -66,12 +66,3 @@ file "#{ci_directory}\\config.xml" do
   XML
   action :create
 end
-
-# hudson.model.UpdateCenter.xml
-# <?xml version='1.0' encoding='UTF-8'?>
-# <sites>
-#   <site>
-#     <id>default</id>
-#     <url>http://updates.jenkins-ci.org/update-center.json</url>
-#   </site>
-# </sites>
