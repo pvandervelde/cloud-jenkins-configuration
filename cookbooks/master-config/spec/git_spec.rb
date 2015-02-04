@@ -65,3 +65,4 @@ describe 'master'  do
   it 'updates gitconfig in the git/etc install directory' do
     expect(chef_run).to create_file('C:\\Program Files (x86)\\Git\\etc\\gitconfig').with_content(git_config_content)
   end
+end

@@ -73,9 +73,14 @@ plugins = {
   'ws-cleanup' => '0.25',
 }
 
+plugins_directory = "#{ci_directory}\\plugins"
+directory plugins_directory do
+  action :create
+end
+
 plugins.each do |name, version|
-  remote_file "#{ci_directory}\\plugins\\#{name}.hpi" do
-    source 'http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi'
+  remote_file "#{plugins_directory}\\#{name}.hpi" do
+    source "http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi"
     action :create
   end
 end
@@ -110,7 +115,7 @@ file "#{ci_directory}\\hudson.plugins.emailext.ExtendedEmailPublisher.xml" do
   <enableSecurity>true</enableSecurity>
   <requireAdminForTemplateTesting>true</requireAdminForTemplateTesting>
   <enableWatching>false</enableWatching>
-</hudson.plugins.emailext.ExtendedEmailPublisherDescriptor>>
+</hudson.plugins.emailext.ExtendedEmailPublisherDescriptor>
   XML
   action :create
 end
