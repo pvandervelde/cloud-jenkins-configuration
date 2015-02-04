@@ -145,7 +145,7 @@
         <!-- NOTE: The 'DirWorkspace' property is always set to the top-level directory of the workspace / repository -->
 
         <!-- The directory that will contain all the files generated during the build process -->
-        <!-- <DirBuild Condition=" '$(DirBuild)' == '' ">$(DirWorkspace)\build</DirBuild> -->
+        <DirBuild Condition=" '$(DirBuild)' == '' ">$(DirWorkspace)\build</DirBuild>
 
         <!--
             The directory that will contain all the binaries generated during the build process.
@@ -167,7 +167,10 @@
         <!-- <DirBuildLogs Condition=" '$(DirBuildLogs)' == '' ">$(DirBuild)\logs</DirBuildLogs> -->
 
         <!-- The directory that will contain all the temporary files needed during the build process -->
-        <!-- <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp> -->
+        <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp>
+
+        <!-- The directory that will contain all the master setup files -->
+        <DirBuildTempSetup>$(DirBuildTemp)\setup\master</DirBuildTempSetup>
 
         <!-- The directory that contains all the NuGet packages for the project -->
         <!-- <DirPackages Condition=" '$(DirPackages)' == '' ">$(DirWorkspace)\packages</DirPackages> -->
@@ -260,17 +263,8 @@
             </Properties>
         </BuildStepsToExecute>
 
-        <BuildStepsToExecute Include="$(DirWorkspace)\build.create.masterimage.msbuild">
+        <BuildStepsToExecute Include="$(BuildStepsPackZip)">
             <Properties>
-                Configuration=$(ProductionConfiguration);
-                Platform=$(Platform)
-            </Properties>
-        </BuildStepsToExecute>
-
-        <BuildStepsToExecute Include="$(DirWorkspace)\test.verify.masterimage.msbuild">
-            <Properties>
-                Configuration=$(ProductionConfiguration);
-                Platform=$(Platform)
             </Properties>
         </BuildStepsToExecute>
     </ItemGroup>
@@ -279,11 +273,13 @@
         Define the scripts that should be executed when any one of the build steps fails.
     -->
     <ItemGroup>
+        <!--
         <BuildFailureStepsToExecute Include="$(DirWorkspace)\error.remove.image.msbuild">
             <Properties>
                 FileJenkinsConfig=$(FileJenkinsMasterConfig)
             </Properties>
         </BuildFailureStepsToExecute>
+        -->
     </ItemGroup>
 
 
@@ -400,6 +396,28 @@
         -->
     </ItemGroup>
 
+    <!--
+        **** PACK - ZIP ARCHIVE ****
+    -->
+    <!--
+        The item group defining the location and contents of the archive files that are generated during the build
+
+        The IncludedFiles and the ExcludedFiles are actually lists of packages.config files that
+        should be included (or excluded) in the list of dependencies. Each entry is separated by a semi-colon(;).
+
+        Allows build templates.
+    -->
+    <ItemGroup>
+        <ArchivePackageSpecs Include="$(DirBuildDeploy)\jenkins_master_configuration-${VersionSemantic}.zip">
+            <DirBase>$(DirBuildTempSetup)</DirBase>
+            <IncludedFiles>
+                $(DirBuildTempSetup)\**\*.*
+            </IncludedFiles>
+            <ExcludedFiles>
+            </ExcludedFiles>
+        </ArchivePackageSpecs>
+    </ItemGroup>
+
 
 
 
@@ -480,13 +498,13 @@
     -->
     <ItemGroup>
         <PushToGitHubReleaseSpecs Include="${VersionSemantic} - My release">
-             <Repository>MyCoolProject</Repository>
-             <Description>${ReleaseNotesShort}</Description>
-             <IncludedFiles>
+            <Repository>MyCoolProject</Repository>
+            <Description>${ReleaseNotesShort}</Description>
+            <IncludedFiles>
                 $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip
-             </IncludedFiles>
-             <ExcludedFiles>
-             </ExcludedFiles>
+            </IncludedFiles>
+            <ExcludedFiles>
+            </ExcludedFiles>
         </PushToGitHubReleaseSpecs>
     </ItemGroup>
 
