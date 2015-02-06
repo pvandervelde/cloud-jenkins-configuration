@@ -1,0 +1,8 @@
+Metrics/LineLength:
+  Max: 100
+  Enabled: false
+
+AllCops:
+  Exclude:
+    - 'cookbooks/**/*'
+    - 'spec/**/*'

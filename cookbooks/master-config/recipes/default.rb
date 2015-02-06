@@ -7,6 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "git"
-include_recipe "configuration"
-include_recipe "plugins"
+include_recipe 'git'
+include_recipe 'configuration'
+include_recipe 'plugins'
