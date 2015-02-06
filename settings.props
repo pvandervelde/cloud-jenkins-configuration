@@ -169,8 +169,8 @@
         <!-- The directory that will contain all the temporary files needed during the build process -->
         <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp>
 
-        <!-- The directory that will contain all the master setup files -->
-        <DirBuildTempSetup>$(DirBuildTemp)\setup\master</DirBuildTempSetup>
+        <!-- The directory that will contain all the master setup and verification files -->
+        <DirBuildTempMaster>$(DirBuildTemp)\master</DirBuildTempMaster>
 
         <!-- The directory that contains all the NuGet packages for the project -->
         <!-- <DirPackages Condition=" '$(DirPackages)' == '' ">$(DirWorkspace)\packages</DirPackages> -->
@@ -409,9 +409,9 @@
     -->
     <ItemGroup>
         <ArchivePackageSpecs Include="$(DirBuildDeploy)\jenkins_master_configuration-${VersionSemantic}.zip">
-            <DirBase>$(DirBuildTempSetup)</DirBase>
+            <DirBase>$(DirBuildTempMaster)</DirBase>
             <IncludedFiles>
-                $(DirBuildTempSetup)\**\*.*
+                $(DirBuildTempMaster)\**\*.*
             </IncludedFiles>
             <ExcludedFiles>
             </ExcludedFiles>

@@ -23,42 +23,38 @@
         <DirBuild Condition=" '$(DirBuild)' == '' ">$(DirWorkspace)\build</DirBuild>
         <DirBuildLogs Condition=" '$(DirBuildLogs)' == '' ">$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp>
-        <DirBuildTempSetup>$(DirBuildTemp)\setup\master</DirBuildTempSetup>
-        <DirBuildTempSetupCookbooks>$(DirBuildTempSetup)\cookbooks</DirBuildTempSetupCookbooks>
-        <DirBuildTempSetupCookbooksMaster>$(DirBuildTempSetupCookbooks)\master</DirBuildTempSetupCookbooksMaster>
+        <DirBuildTempMaster>$(DirBuildTemp)\master</DirBuildTempMaster>
+        <DirBuildTempMasterCookbooks>$(DirBuildTempMaster)\cookbooks</DirBuildTempMasterCookbooks>
+        <DirBuildTempMasterCookbooksMaster>$(DirBuildTempMasterCookbooks)\master-config</DirBuildTempMasterCookbooksMaster>
+        <DirBuildTempMasterSpec>$(DirBuildTempMaster)\spec</DirBuildTempMasterSpec>
+        <DirBuildTempMasterSpecMaster>$(DirBuildTempMasterSpec)\master-config</DirBuildTempMasterSpecMaster>
 
         <DirConfig Condition=" '$(DirConfig)' == '' ">$(DirWorkspace)\config</DirConfig>
         <DirChefCookbooks Condition=" '$(DirChefCookbooks)' == '' ">$(DirWorkspace)\cookbooks</DirChefCookbooks>
-        <DirChefCookbooksMaster>$(DirChefCookbooks)\master</DirChefCookbooksMaster>
-        <DirScripts Condition=" '$(DirScripts)' == '' ">$(DirWorkspace)\scripts</DirScripts>
-        <DirScriptsAzure Condition=" '$(DirScriptsAzure)' == '' ">$(DirScripts)\azure</DirScriptsAzure>
-        <DirTemplates Condition=" '$(DirTemplates)' == '' ">$(DirWorkspace)\templates</DirTemplates>
+        <DirChefCookbooksMaster>$(DirChefCookbooks)\master-config</DirChefCookbooksMaster>
 
-        <DirExternalInstallers Condition=" '$(DirExternalInstallers)' == '' ">UNDEFINED</DirExternalInstallers>
-
-        <!-- Azure configuration -->
-        <AzureSubscriptionName Condition=" '$(AzureSubscriptionName)' == '' ">UNDEFINED</AzureSubscriptionName>
-        <AzureServiceName Condition=" '$(AzureServiceName)' == '' ">UNDEFINED</AzureServiceName>
-        <AzureStorageAccount Condition=" '$(AzureStorageAccount)' == '' ">UNDEFINED</AzureStorageAccount>
-
-        <AzureSslCertificateName Condition=" '$(AzureSslCertificateName)' == '' AND '$(AzureServiceName)' != 'UNDEFINED' ">$(AzureServiceName).cloudapp.net</AzureSslCertificateName>
-        <AzureSslCertificateName Condition=" '$(AzureSslCertificateName)' == '' ">UNDEFINED</AzureSslCertificateName>
-
-        <!-- Virtual machine template configuration -->
-        <TemplateAdminstratorName Condition=" '$(TemplateAdminstratorName)' == '' ">TheBigCheese</TemplateAdminstratorName>
-        <TemplateAdminstratorPassword Condition=" '$(TemplateAdminstratorPassword)' == '' ">{E1BF62A1-24F4-49F4-A56F-1844868D26DC}</TemplateAdminstratorPassword>
-
-        <!-- External tools -->
-        <ToolsExternalPowershellPath Condition=" '$(ToolsExternalPowershellPath)' == '' ">C:\Windows\System32\WindowsPowerShell\v1.0</ToolsExternalPowershellPath>
+        <DirSpec Condition=" '$(DirSpec)' == '' ">$(DirWorkspace)\spec</DirSpec>
+        <DirSpecMaster Condition=" '$(DirSpecMaster)' == '' ">$(DirSpec)\master-config</DirSpecMaster>
 
         <!-- Files -->
         <FileSemanticVersion Condition=" '$(FileSemanticVersion)' == '' ">$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
         <FileMasterMetadataTemplate>$(DirChefCookbooksMaster)\metadata.rb</FileMasterMetadataTemplate>
-        <FileMasterMetadataGenerated>$(DirBuildTempSetupCookbooksMaster)\metadata.rb</FileMasterMetadataGenerated>
+        <FileMasterMetadataGenerated>$(DirBuildTempMasterCookbooksMaster)\metadata.rb</FileMasterMetadataGenerated>
+
+        <FileMasterPathsTemplate>$(DirChefCookbooksMaster)\paths.rb</FileMasterPathsTemplate>
+        <FileMasterPathsGenerated>$(DirBuildTempMasterCookbooksMaster)\paths.rb</FileMasterPathsGenerated>
+        <FileSpecPathsGenerated>$(DirBuildTempMasterSpec)\paths.rb</FileSpecPathsGenerated>
+
+        <FileMasterPluginsTemplate>$(DirChefCookbooksMaster)\plugins.rb</FileMasterPluginsTemplate>
+        <FileMasterPluginsGenerated>$(DirBuildTempMasterCookbooksMaster)\plugins.rb</FileMasterPluginsGenerated>
+        <FileSpecPluginsGenerated>$(DirBuildTempMasterSpec)\plugins.rb</FileSpecPluginsGenerated>
 
         <!-- Version number -->
         <VersionSemantic>0</VersionSemantic>
     </PropertyGroup>
+
+    <Import Project="$(DirWorkspace)\settings.master.props"
+            Condition="Exists('$(DirWorkspace)\settings.master.props') AND '$(ExistsMasterSettings)' != 'true' " />
 
     <Import Project="$(DirMsBuildShared)\shared.templatetokens.msbuild"
             Condition="Exists('$(DirMsBuildShared)\shared.templatetokens.msbuild') AND '$(ExistsSharedTemplateTokens)' != 'true' " />
@@ -70,7 +66,9 @@
 
     <Target Name="Build_Prepare_MasterConfiguration_Run" DependsOnTargets="_Build_Prepare_MasterConfiguration_DisplayInfo">
         <CallTarget Targets="_Build_Prepare_MasterConfiguration_GetVersion" />
-        <CallTarget Targets="_Build_Prepare_MasterConfiguration_GatherInstallers" />
+        <CallTarget Targets="_Build_Prepare_MasterConfiguration_GatherCookbooks" />
+        <CallTarget Targets="_Build_Prepare_MasterConfiguration_GatherSpecTests" />
+        <CallTarget Targets="_Build_Prepare_MasterConfiguration_GenerateFiles" />
     </Target>
 
     <Target Name="_Build_Prepare_MasterConfiguration_DisplayInfo">
@@ -80,16 +78,13 @@
         <Message Text="The directory containing the build logs is located at:            $(DirBuildLogs)" />
         <Message Text="The directory containing the temporary build files is located at: $(DirBuildTemp)" />
         <Message Text="The directory containing the installer files is located at:       $(DirBuildTempInstallers)" />
-        <Message Text="The directory containing the configuration is located at:  $(DirConfig)" />
+        <Message Text="The directory containing the configuration is located at:         $(DirConfig)" />
         <Message Text="The directory containing the installation scripts is located at:  $(DirScripts)" />
         <Message Text=" " />
 
         <Message Text="Jenkins master configuration template file is located at: $(FileMasterConfigTemplate)" />
         <Message Text="Jenkins master configuration file is located at:          $(FileMasterConfig)" />
         <Message Text="Jenkins master build script is located at:                $(FileMasterScript)" />
-        <Message Text=" " />
-
-        <Message Text="Powershell command line executable is located at:         $(ToolsExternalPowershellPath)" />
         <Message Text=" " />
     </Target>
 
@@ -102,25 +97,89 @@
         <Message Text="Version: $(VersionSemantic)" />
     </Target>
 
-    <Target Name="_Build_Prepare_MasterConfiguration_GatherInstallers"
+    <Target Name="_Build_Prepare_MasterConfiguration_GatherCookbooks"
             DependsOnTargets="nBuildKit_Shared_TemplateTokens_Initialize">
         <MakeDir Directories="$(DirBuild)"
                  Condition="!Exists('$(DirBuild)')" />
         <MakeDir Directories="$(DirBuildTemp)"
                  Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildTempSetup)"
-                 Condition="!Exists('$(DirBuildTempSetup)')" />
+        <MakeDir Directories="$(DirBuildTempMaster)"
+                 Condition="!Exists('$(DirBuildTempMaster)')" />
+        <MakeDir Directories="$(DirBuildTempMasterCookbooks)"
+                 Condition="!Exists('$(DirBuildTempMasterCookbooks)')" />
+        <MakeDir Directories="$(DirBuildTempMasterCookbooksMaster)"
+                 Condition="!Exists('$(DirBuildTempMasterCookbooksMaster)')" />
 
         <ItemGroup>
             <CookBookFiles Include="$(DirChefCookbooks)\**\*.*"
                            Exclude="$(FileMasterMetadataTemplate)" />
         </ItemGroup>
         <Copy SourceFiles="@(CookBookFiles)"
-              DestinationFiles="@(CookBookFiles->'$(DirBuildTempSetupCookbooks)\%(RecursiveDir)%(Filename)%(Extension)')" />
+              DestinationFiles="@(CookBookFiles->'$(DirBuildTempMasterCookbooks)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
+    <Target Name="_Build_Prepare_MasterConfiguration_GatherSpecTests">
+        <MakeDir Directories="$(DirBuild)"
+                 Condition="!Exists('$(DirBuild)')" />
+        <MakeDir Directories="$(DirBuildTemp)"
+                 Condition="!Exists('$(DirBuildTemp)')" />
+        <MakeDir Directories="$(DirBuildTempMaster)"
+                 Condition="!Exists('$(DirBuildTempMaster)')" />
+        <MakeDir Directories="$(DirBuildTempMasterSpec)"
+                 Condition="!Exists('$(DirBuildTempMasterSpec)')" />
+        <MakeDir Directories="$(DirBuildTempMasterSpecMaster)"
+                 Condition="!Exists('$(DirBuildTempMasterSpecMaster)')" />
+
+        <ItemGroup>
+            <HelperFiles Include="$(DirSpec)\*.rb" />
+        </ItemGroup>
+        <Copy SourceFiles="@(HelperFiles)"
+              DestinationFiles="@(HelperFiles->'$(DirBuildTempMasterSpec)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+        <ItemGroup>
+            <SpecFiles Include="$(DirSpecMaster)\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(SpecFiles)"
+              DestinationFiles="@(SpecFiles->'$(DirBuildTempMasterSpecMaster)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
+    <Target Name="_Build_Prepare_MasterConfiguration_GenerateFiles"
+            DependsOnTargets="nBuildKit_Shared_TemplateTokens_Initialize">
+        <MakeDir Directories="$(DirBuild)"
+                 Condition="!Exists('$(DirBuild)')" />
+        <MakeDir Directories="$(DirBuildTemp)"
+                 Condition="!Exists('$(DirBuildTemp)')" />
+        <MakeDir Directories="$(DirBuildTempMaster)"
+                 Condition="!Exists('$(DirBuildTempMaster)')" />
 
         <TemplateFile Template="$(FileMasterMetadataTemplate)"
                       OutputFileName="$(FileMasterMetadataGenerated)"
                       Tokens="@(TemplateTokens)"
+                      Condition=" '$(ShouldExecute)' == 'true' "/>
+
+        <TemplateFile Template="$(FileMasterPathsTemplate)"
+                      OutputFileName="$(FileMasterPathsGenerated)"
+                      Tokens="@(JenkinsMasterPaths)"
+                      Condition=" '$(ShouldExecute)' == 'true' "/>
+
+        <TemplateFile Template="$(FileMasterPathsTemplate)"
+                      OutputFileName="$(FileSpecPathsGenerated)"
+                      Tokens="@(JenkinsMasterPaths)"
+                      Condition=" '$(ShouldExecute)' == 'true' "/>
+
+        <ItemGroup>
+            <PluginTokens Include="JenkinsPlugins">
+                <ReplacementValue>@(PluginsToInstall->'%27%(Identity)%27 => %27%(Version)%27', ', ')</ReplacementValue>
+            </PluginTokens>
+        </ItemGroup>
+        <TemplateFile Template="$(FileMasterPluginsTemplate)"
+                      OutputFileName="$(FileMasterPluginsGenerated)"
+                      Tokens="@(PluginTokens)"
+                      Condition=" '$(ShouldExecute)' == 'true' "/>
+
+        <TemplateFile Template="$(FileMasterPluginsTemplate)"
+                      OutputFileName="$(FileSpecPluginsGenerated)"
+                      Tokens="@(PluginTokens)"
                       Condition=" '$(ShouldExecute)' == 'true' "/>
     </Target>
 </Project>
