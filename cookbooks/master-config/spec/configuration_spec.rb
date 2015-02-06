@@ -1,4 +1,5 @@
 require 'chefspec'
+require File.join(File.dirname(__FILE__), '..', 'paths')
 
 RSpec.configure do |config|
   # Specify the path for Chef Solo to find cookbooks (default: [inferred from
@@ -24,7 +25,6 @@ RSpec.configure do |config|
   config.version = '2012'
 end
 
-ci_directory = 'c:\\ci'
 jenkins_version = '1.598'
 jenkins_workspace_dir = '\\\\invalid\\workspace'
 jenkins_data_dir = '\\\\invalid\\data'

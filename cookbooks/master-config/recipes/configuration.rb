@@ -6,12 +6,13 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+require File.join(File.dirname(__FILE__), '..', 'plugins')
+require File.join(File.dirname(__FILE__), '..', 'paths')
 
 include_recipe 'windows'
 
 # Define the CI directory that contains the jenkins installation
 # Should really get this from outside
-ci_directory = 'c:\\ci'
 jenkins_version = '1.598'
 jenkins_workspace_dir = '\\\\invalid\\workspace'
 jenkins_data_dir = '\\\\invalid\\data'

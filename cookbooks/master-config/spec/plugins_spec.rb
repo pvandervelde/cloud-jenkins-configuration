@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), '..', 'plugins')
+require File.join(File.dirname(__FILE__), '..', 'paths')
 require 'chefspec'
 
 RSpec.configure do |config|
@@ -32,73 +34,15 @@ describe 'master'  do
     expect(chef_run).to create_directory(plugins_directory)
   end
 
-  # Install the plugins
-  plugins = {
-    'active-directory' => '1.39',
-    'all-changes' => '1.3',
-    'analysis-collector' => '1.42',
-    'analysis-core' => '1.67',
-    'ant' => '1.2',
-    'any-buildstep' => '0.1',
-    'artifactdeployer' => '1.3',
-    'audit-trail' => '2.1',
-    'azure-slave-plugin' => '0.3.0',
-    'build-failure-analyzer' => '1.12.1',
-    'build-flow-plugin' => '0.10',
-    'build-name-setter' => '1.3',
-    'build-timeout' => '1.14.1',
-    'buildgraph-view' => '1.0',
-    'categorized-view' => '1.8',
-    'claim' => '2.5',
-    'cloudbees-folder' => '4.7',
-    'cobertura' => '1.9.6',
-    'conditional-buildstep' => '1.3.3',
-    'config-file-provider' => '2.7.5',
-    'copyartifact' => '1.34',
-    'credentials' => '1.22',
-    'dashboard-view' => '2.9.4',
-    'email-ext' => '2.39',
-    'envinject' => '1.90',
-    'exclusive-execution' => '0.7',
-    'flexible-publish' => '0.14.1',
-    'gerrit-trigger' => '2.7.0',
-    'git' => '2.3.4',
-    'git-client' => '1.15.0',
-    'git-parameter' => '0.4.0',
-    'gravatar' => '2.1',
-    'greenballs' => '1.14',
-    'javadoc' => '1.3',
-    'jenkins-multijob-plugin' => '1.16',
-    'mailer' => '1.13',
-    'mapdb-api' => '1.0.6.0',
-    'matrix-auth' => '1.2',
-    'matrix-project' => '1.4',
-    'maven-plugin' => '2.8',
-    'msbuild' => '1.24',
-    'nunit' => '0.16',
-    'parametrized-trigger' => '2.25',
-    'powershell' => '1.2',
-    'promoted-builds' => '2.19',
-    'run-condition' => '1.0',
-    'scm-api' => '0.2',
-    'script-security' => '1.12',
-    'ssh-credentials' => '1.10',
-    'subversion' => '2.5',
-    'swarm' => '1.22',
-    'tasks' => '4.44',
-    'token-macro' => '1.10',
-    'violations' => '0.7.11',
-    'warnings' => '4.45',
-    'ws-cleanup' => '0.25',
-  }
-
+  # Verify the plugins
+  # Note that the plugin variable is defined in the plugin.rb file in the root of the cookbook.
   plugins.each do |name, version|
     it "installs the #{name} plugin" do
       expect(chef_run).to create_remote_file("#{plugins_directory}\\#{name}.hpi").with_source("http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi")
     end
   end
 
-  jenkins_plugin_emailext_version = plugins["email-ext"]
+  jenkins_plugin_emailext_version = plugins['email-ext']
   jenkins_emailext_default_recipient = 'cc:builds@example.com'
   jenkins_emailext_default_replyto = 'builds@example.com'
   jenkins_plugin_emailext_config_content = <<-XML
@@ -128,7 +72,7 @@ describe 'master'  do
     expect(chef_run).to create_file("#{ci_directory}\\hudson.plugins.emailext.ExtendedEmailPublisher.xml").with_content(jenkins_plugin_emailext_config_content)
   end
 
-  jenkins_plugin_gittool_version = plugins["git-client"]
+  jenkins_plugin_gittool_version = plugins['git-client']
   jenkins_plugin_gittool_config_content = <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson.plugins.git.GitTool_-DescriptorImpl plugin="git-client@#{jenkins_plugin_gittool_version}">
@@ -145,7 +89,7 @@ describe 'master'  do
     expect(chef_run).to create_file("#{ci_directory}\\hudson.plugins.git.GitTool.xml").with_content(jenkins_plugin_gittool_config_content)
   end
 
-  jenkins_plugin_msbuild_version = plugins["msbuild"]
+  jenkins_plugin_msbuild_version = plugins['msbuild']
   jenkins_plugin_msbuild_config_content = <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson.plugins.msbuild.MsBuildBuilder_-DescriptorImpl plugin="msbuild@#{jenkins_plugin_msbuild_version}">
