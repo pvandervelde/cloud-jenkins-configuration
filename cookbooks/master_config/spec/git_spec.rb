@@ -24,7 +24,7 @@ RSpec.configure do |config|
   config.version = '2012'
 end
 
-describe 'master'  do
+describe 'master_config'  do
   let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
 
   # install git (c:\program files (x86)\git --> 1.9.5)

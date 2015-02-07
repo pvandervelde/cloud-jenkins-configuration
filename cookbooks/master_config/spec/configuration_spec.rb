@@ -1,31 +1,45 @@
-#
-# Cookbook Name:: master-config
-# Recipe:: configuration
-#
-# Copyright 2014, Patrick van der Velde
-#
-# All rights reserved - Do Not Redistribute
-#
-require File.join(File.dirname(__FILE__), '..', 'plugins')
-require File.join(File.dirname(__FILE__), '..', 'paths')
+require 'chefspec'
+require_relative '../libraries/paths'
 
-include_recipe 'windows'
+RSpec.configure do |config|
+  # Specify the path for Chef Solo to find cookbooks (default: [inferred from
+  # the location of the calling spec file])
+  # config.cookbook_path = File.join(File.dirname(__FILE__), '..', '..')
 
-# Define the CI directory that contains the jenkins installation
-# Should really get this from outside
+  # Specify the path for Chef Solo to find roles (default: [ascending search])
+  # config.role_path = '/var/roles'
+
+  # Specify the path for Chef Solo to find environments (default: [ascending search])
+  # config.environment_path = '/var/environments'
+
+  # Specify the Chef log_level (default: :warn)
+  config.log_level = :debug
+
+  # Specify the path to a local JSON file with Ohai data (default: nil)
+  # config.path = 'ohai.json'
+
+  # Specify the operating platform to mock Ohai data from (default: nil)
+  config.platform = 'windows'
+
+  # Specify the operating version to mock Ohai data from (default: nil)
+  config.version = '2012'
+end
+
 jenkins_version = '1.598'
 jenkins_workspace_dir = '\\\\invalid\\workspace'
 jenkins_data_dir = '\\\\invalid\\data'
 jenkins_master_labels = ''
 
-# Copy all the default jenkins files from the cookbook
-remote_directory ci_directory do
-  source 'jenkins'
-  action :create
-end
+describe 'master_config'  do
+  let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
 
-file "#{ci_directory}\\config.xml" do
-  content <<-XML
+  # install git (c:\program files (x86)\git --> 1.9.5)
+  it 'copies the master files' do
+    expect(chef_run).to create_remote_directory(ci_directory).with_source('jenkins')
+  end
+
+  # update the system git config
+  jenkins_config_content = <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson>
   <version>#{jenkins_version}</version>
@@ -65,5 +79,8 @@ file "#{ci_directory}\\config.xml" do
   </globalNodeProperties>
 </hudson>
   XML
-  action :create
+
+  it 'creates the jenkins config.xml file' do
+    expect(chef_run).to create_file("#{ci_directory}\\config.xml").with_content(jenkins_config_content)
+  end
 end

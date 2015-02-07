@@ -6,3 +6,5 @@ AllCops:
   Exclude:
     - 'cookbooks/**/*'
     - 'spec/**/*'
+    - 'build/temp/master/cookbooks/chef_handler/**/*'
+    - 'build/temp/master/cookbooks/windows/**/*'

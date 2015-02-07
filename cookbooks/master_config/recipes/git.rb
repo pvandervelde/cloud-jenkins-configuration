@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: master-config
+# Cookbook Name:: master_config
 # Recipe:: git
 #
 # Copyright 2014, Patrick van der Velde

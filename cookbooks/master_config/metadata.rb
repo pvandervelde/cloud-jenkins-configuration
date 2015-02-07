@@ -1,4 +1,4 @@
-name 'master-config'
+name 'master_config'
 maintainer '${CompanyName} (${CompanyUrl})'
 maintainer_email '${EmailDocumentation}'
 license 'All rights reserved'

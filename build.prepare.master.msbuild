@@ -25,28 +25,30 @@
         <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp>
         <DirBuildTempMaster>$(DirBuildTemp)\master</DirBuildTempMaster>
         <DirBuildTempMasterCookbooks>$(DirBuildTempMaster)\cookbooks</DirBuildTempMasterCookbooks>
-        <DirBuildTempMasterCookbooksMaster>$(DirBuildTempMasterCookbooks)\master-config</DirBuildTempMasterCookbooksMaster>
+        <DirBuildTempMasterCookbooksMaster>$(DirBuildTempMasterCookbooks)\master_config</DirBuildTempMasterCookbooksMaster>
+        <DirBuildTempMasterCookbooksMasterLibraries>$(DirBuildTempMasterCookbooksMaster)\libraries</DirBuildTempMasterCookbooksMasterLibraries>
         <DirBuildTempMasterSpec>$(DirBuildTempMaster)\spec</DirBuildTempMasterSpec>
-        <DirBuildTempMasterSpecMaster>$(DirBuildTempMasterSpec)\master-config</DirBuildTempMasterSpecMaster>
+        <DirBuildTempMasterSpecMaster>$(DirBuildTempMasterSpec)\master_config</DirBuildTempMasterSpecMaster>
 
         <DirConfig Condition=" '$(DirConfig)' == '' ">$(DirWorkspace)\config</DirConfig>
         <DirChefCookbooks Condition=" '$(DirChefCookbooks)' == '' ">$(DirWorkspace)\cookbooks</DirChefCookbooks>
         <DirChefCookbooksMaster>$(DirChefCookbooks)\master-config</DirChefCookbooksMaster>
+        <DirChefCookbooksMasterLibraries>$(DirChefCookbooksMaster)\libraries</DirChefCookbooksMasterLibraries>
 
         <DirSpec Condition=" '$(DirSpec)' == '' ">$(DirWorkspace)\spec</DirSpec>
-        <DirSpecMaster Condition=" '$(DirSpecMaster)' == '' ">$(DirSpec)\master-config</DirSpecMaster>
+        <DirSpecMaster Condition=" '$(DirSpecMaster)' == '' ">$(DirSpec)\master_config</DirSpecMaster>
 
         <!-- Files -->
         <FileSemanticVersion Condition=" '$(FileSemanticVersion)' == '' ">$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
         <FileMasterMetadataTemplate>$(DirChefCookbooksMaster)\metadata.rb</FileMasterMetadataTemplate>
         <FileMasterMetadataGenerated>$(DirBuildTempMasterCookbooksMaster)\metadata.rb</FileMasterMetadataGenerated>
 
-        <FileMasterPathsTemplate>$(DirChefCookbooksMaster)\paths.rb</FileMasterPathsTemplate>
-        <FileMasterPathsGenerated>$(DirBuildTempMasterCookbooksMaster)\paths.rb</FileMasterPathsGenerated>
+        <FileMasterPathsTemplate>$(DirChefCookbooksMasterLibraries)\paths.rb</FileMasterPathsTemplate>
+        <FileMasterPathsGenerated>$(DirBuildTempMasterCookbooksMasterLibraries)\paths.rb</FileMasterPathsGenerated>
         <FileSpecPathsGenerated>$(DirBuildTempMasterSpec)\paths.rb</FileSpecPathsGenerated>
 
-        <FileMasterPluginsTemplate>$(DirChefCookbooksMaster)\plugins.rb</FileMasterPluginsTemplate>
-        <FileMasterPluginsGenerated>$(DirBuildTempMasterCookbooksMaster)\plugins.rb</FileMasterPluginsGenerated>
+        <FileMasterPluginsTemplate>$(DirChefCookbooksMasterLibraries)\plugins.rb</FileMasterPluginsTemplate>
+        <FileMasterPluginsGenerated>$(DirBuildTempMasterCookbooksMasterLibraries)\plugins.rb</FileMasterPluginsGenerated>
         <FileSpecPluginsGenerated>$(DirBuildTempMasterSpec)\plugins.rb</FileSpecPluginsGenerated>
 
         <!-- Version number -->
@@ -112,7 +114,7 @@
 
         <ItemGroup>
             <CookBookFiles Include="$(DirChefCookbooks)\**\*.*"
-                           Exclude="$(FileMasterMetadataTemplate)" />
+                           Exclude="$(FileMasterMetadataTemplate);$(FileMasterPathsTemplate);$(FileMasterPluginsTemplate)" />
         </ItemGroup>
         <Copy SourceFiles="@(CookBookFiles)"
               DestinationFiles="@(CookBookFiles->'$(DirBuildTempMasterCookbooks)\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -151,6 +153,12 @@
                  Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildTempMaster)"
                  Condition="!Exists('$(DirBuildTempMaster)')" />
+        <MakeDir Directories="$(DirBuildTempMasterCookbooks)"
+                 Condition="!Exists('$(DirBuildTempMasterCookbooks)')" />
+        <MakeDir Directories="$(DirBuildTempMasterCookbooksMaster)"
+                 Condition="!Exists('$(DirBuildTempMasterCookbooksMaster)')" />
+        <MakeDir Directories="$(DirBuildTempMasterCookbooksMasterLibraries)"
+                 Condition="!Exists('$(DirBuildTempMasterCookbooksMasterLibraries)')" />
 
         <TemplateFile Template="$(FileMasterMetadataTemplate)"
                       OutputFileName="$(FileMasterMetadataGenerated)"
