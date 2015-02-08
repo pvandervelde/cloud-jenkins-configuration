@@ -8,6 +8,5 @@
 #
 
 include_recipe 'master_config::git'
-require File.join(File.dirname(__FILE__), 'git')
-require File.join(File.dirname(__FILE__), 'configuration')
-require File.join(File.dirname(__FILE__), 'plugins')
+include_recipe 'master_config::configuration'
+include_recipe 'master_config::plugins'
