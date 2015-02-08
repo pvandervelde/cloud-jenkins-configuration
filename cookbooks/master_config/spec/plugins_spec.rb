@@ -32,19 +32,18 @@ end
 describe 'master_config'  do
   let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
 
-  dir = ci_directory()
-  plugins_directory = "#{dir}\\plugins"
+  plugins_directory = "#{ci_directory}\\plugins"
   it 'creates the plugin directory' do
     expect(chef_run).to create_directory(plugins_directory)
   end
 
   # Verify the plugins
   # Note that the plugin variable is defined in the plugin.rb file in the root of the cookbook.
-  # plugins().each do |name, version|
-    # it "installs the #{name} plugin" do
-      # expect(chef_run).to create_remote_file("#{plugins_directory}\\#{name}.hpi").with_source("http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi")
-    # end
-  # end
+  plugins.each do |name, version|
+    it "installs the #{name} plugin" do
+      expect(chef_run).to create_remote_file("#{plugins_directory}\\#{name}.hpi").with_source("http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi")
+    end
+  end
 
   jenkins_plugin_emailext_version = plugins['email-ext']
   jenkins_emailext_default_recipient = 'cc:builds@example.com'
@@ -99,22 +98,22 @@ describe 'master_config'  do
 <hudson.plugins.msbuild.MsBuildBuilder_-DescriptorImpl plugin="msbuild@#{jenkins_plugin_msbuild_version}">
   <installations>
     <hudson.plugins.msbuild.MsBuildInstallation>
-      <name>Net-3.5 (x86)</name>
+      <name>3.5 (x86)</name>
       <home>C:\\Windows\\Microsoft.NET\\Framework\\v3.5\\msbuild.exe</home>
       <properties/>
     </hudson.plugins.msbuild.MsBuildInstallation>
     <hudson.plugins.msbuild.MsBuildInstallation>
-      <name>Net-3.5 (x64)</name>
+      <name>3.5 (x64)</name>
       <home>C:\\Windows\\Microsoft.NET\\Framework64\\v3.5\\msbuild.exe</home>
       <properties/>
     </hudson.plugins.msbuild.MsBuildInstallation>
     <hudson.plugins.msbuild.MsBuildInstallation>
-      <name>Net-4.5 (x86)</name>
+      <name>4.0 (x86)</name>
       <home>C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\msbuild.exe</home>
       <properties/>
     </hudson.plugins.msbuild.MsBuildInstallation>
     <hudson.plugins.msbuild.MsBuildInstallation>
-      <name>Net-4.5 (x64)</name>
+      <name>4.0 (x64)</name>
       <home>C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\msbuild.exe</home>
       <properties/>
     </hudson.plugins.msbuild.MsBuildInstallation>

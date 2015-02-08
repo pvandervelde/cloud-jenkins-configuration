@@ -1,11 +1,11 @@
 module Master
   module Config
     module Plugins
-      def plugins()
+      def plugins
         hash = {
           ${JenkinsPlugins}
         }
-        return hash
+        hash
       end
     end
   end

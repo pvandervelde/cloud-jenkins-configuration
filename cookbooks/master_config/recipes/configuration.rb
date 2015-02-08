@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-::Chef::Recipe.send(:include, MasterConfiguration::Paths)
+::Chef::Recipe.send(:include, Master::Config::Paths)
 
 include_recipe 'windows'
 

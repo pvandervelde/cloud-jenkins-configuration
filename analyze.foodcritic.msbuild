@@ -25,7 +25,7 @@
         <DirBuildTemp Condition=" '$(DirBuildTemp)' == '' ">$(DirBuild)\temp</DirBuildTemp>
         <DirBuildTempMaster>$(DirBuildTemp)\master</DirBuildTempMaster>
         <DirBuildTempMasterCookbooks>$(DirBuildTempMaster)\cookbooks</DirBuildTempMasterCookbooks>
-        <DirBuildTempMasterCookbooksMaster>$(DirBuildTempMasterCookbooks)\master-config</DirBuildTempMasterCookbooksMaster>
+        <DirBuildTempMasterCookbooksMaster>$(DirBuildTempMasterCookbooks)\master_config</DirBuildTempMasterCookbooksMaster>
 
         <!-- External tools -->
         <ToolsExternalFoodCritic Condition=" '$(ToolsExternalFoodCritic)' == '' ">foodcritic</ToolsExternalFoodCritic>

@@ -245,12 +245,10 @@
             </Properties>
         </BuildStepsToExecute>
 
-        <!--
         <BuildStepsToExecute Include="$(DirWorkspace)\analyze.rubocop.msbuild">
             <Properties>
             </Properties>
         </BuildStepsToExecute>
-    -->
         <BuildStepsToExecute Include="$(DirWorkspace)\analyze.foodcritic.msbuild">
             <Properties>
             </Properties>

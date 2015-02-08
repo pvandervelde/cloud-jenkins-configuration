@@ -32,7 +32,7 @@
 
         <DirConfig Condition=" '$(DirConfig)' == '' ">$(DirWorkspace)\config</DirConfig>
         <DirChefCookbooks Condition=" '$(DirChefCookbooks)' == '' ">$(DirWorkspace)\cookbooks</DirChefCookbooks>
-        <DirChefCookbooksMaster>$(DirChefCookbooks)\master-config</DirChefCookbooksMaster>
+        <DirChefCookbooksMaster>$(DirChefCookbooks)\master_config</DirChefCookbooksMaster>
         <DirChefCookbooksMasterLibraries>$(DirChefCookbooksMaster)\libraries</DirChefCookbooksMasterLibraries>
 
         <DirSpec Condition=" '$(DirSpec)' == '' ">$(DirWorkspace)\spec</DirSpec>
