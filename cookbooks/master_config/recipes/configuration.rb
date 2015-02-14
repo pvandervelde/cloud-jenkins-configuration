@@ -12,7 +12,6 @@ include_recipe 'windows'
 
 # Define the CI directory that contains the jenkins installation
 # Should really get this from outside
-jenkins_version = '1.598'
 jenkins_workspace_dir = '\\\\invalid\\workspace'
 jenkins_data_dir = '\\\\invalid\\data'
 jenkins_master_labels = ''
@@ -27,7 +26,6 @@ file "#{ci_directory}\\config.xml" do
   content <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson>
-  <version>#{jenkins_version}</version>
   <numExecutors>0</numExecutors>
   <mode>EXCLUSIVE</mode>
   <useSecurity>true</useSecurity>

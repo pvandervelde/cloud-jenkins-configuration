@@ -25,7 +25,6 @@ RSpec.configure do |config|
   config.version = '2012'
 end
 
-jenkins_version = '1.598'
 jenkins_workspace_dir = '\\\\invalid\\workspace'
 jenkins_data_dir = '\\\\invalid\\data'
 jenkins_master_labels = ''
@@ -42,7 +41,6 @@ describe 'master_config'  do
   jenkins_config_content = <<-XML
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson>
-  <version>#{jenkins_version}</version>
   <numExecutors>0</numExecutors>
   <mode>EXCLUSIVE</mode>
   <useSecurity>true</useSecurity>
